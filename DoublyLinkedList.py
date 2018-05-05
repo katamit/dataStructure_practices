@@ -3,7 +3,7 @@
 #Created Date : 05-May -2018
 #
 '''
-This program demonstrate the creation and some other functionalies like:
+This program demonstrate the creation and some other functionalies of Doubly Linked List like:
 	1. push
 	2. push to the left
 	3. pop
@@ -17,150 +17,121 @@ This program demonstrate the creation and some other functionalies like:
 
 # Represent of a single node in a list
 class Node:
-	def __init__(self, data):
+	def __init__(self, data=None, prev=None, next=None):
 		self.data = data
-		self.next = None
+		self.prev = prev
+		self.next = next
 
-# Implementation of the singely linked list
-class SingleLinkedList:
-	def __init__(self, value=None):
+class DoublyLinkedList:
+	def __init__(self, data=None):
 		self.head = None
 		self.tail = None
-		self.length = 0
-		if value:
-			node = Node(value)
+		self.count = 0
+		if data:
+			node = Node(data)
 			self.head = node
 			self.tail = node
-			self.length += 1
+			self.count = 1
 
-# Add an element to the end of the list
 	def push(self, data):
-		node = Node(data)
-		if not self.head:
+		node = Node(data, prev= self.tail)
+		if not self.tail:
 			self.head = node
 			self.tail = node
 		else:
 			self.tail.next = node
 			self.tail = node
-		self.length += 1
+		self.count += 1
 
-# Add an element to the beginning of the list
 	def push_left(self, data):
-		node = Node(data)
+		node = Node(data, next=self.head)
 		if not self.head:
-			self.head = Node
-			self.tail = Node
-		else:
-			node.next = self.head
 			self.head = node
-		self.length += 1
+			self.tail = node
+		else:
+			self.head.prev = node
+			self.head = node
+		self.count += 1
 
 	def pop(self):
-		# Need to iterate to pop the last element which is a over head
-		# can be handle easily by putting one more prev pointer in node class as we will 
-		# see in case of doubly linked list
-		if not self.tail:
+		if self.count == 0:
 			raise AssertionError('List is Empty')
-		
-		prev = None
-		current = self.head
-		# checking for the list with only one element
-		if self.length == 1:
-			value = current.data
-			self.head = None
+
+		value = self.tail.data
+		# self.tail.prev.next = None
+		if self.count == 1:
 			self.tail = None
-			self.length -= 1
-			return value
-
-		while current.next:
-			prev = current
-			current = current.next
-		value = current.data
-		prev.next = None
-		self.tail = prev
-		self.length -= 1
+			self.head = None
+		else:
+			self.tail = self.tail.prev
+			self.tail.next = None
+		self.count -= 1
 		return value
-
-# Delete a element from the left
+	
 	def pop_left(self):
-		if not self.head:
+		if self.count == 0:
 			raise AssertionError('List is Empty')
 		value = self.head.data
-		self.head = self.head.next
-		self.length -= 1
-		if self.length == 0:
+		if self.count == 1:
+			self.head = None
 			self.tail = None
+		else:
+			self.head = self.head.next
+			self.head.prev = None
+		self.count -= 1
 		return value
 
-# remove a  node by the value
-	def remove(self, value):
-		if not self.head:
-			raise AssertionError('List is Empty')
-			
-		if self.head.data == value:
-			if self.pop_left():
-				return True
-
-		prev = self.head
-		current = self.head.next
-		while current:
-			if current.data == value:
-				prev.next = current.next
-				self.length -= 1
-				if self.tail == current:
-					self.tail = prev
-				return True
-			prev = current
-			current = current.next
-		else:
-			return False
-
-
-# return the size of the linked list
-	def get_length(self):
-		return self.length
-
-# Traversing the list
 	def iter(self):
-		if not self.head:
-			raise AssertionError('List is Empty')
-
 		current = self.head
 		while current:
 			value = current.data
 			current = current.next
 			yield value
 
-# search a element
-	def search(self, value):
-		# other way of implementation
-		# if !self.head:
-		# 	retrun False
-		# current = self.head
-		# while current:
-			# if current.data == value:
-			# 	return True
-			# current = current.next
-		# else:
-		# 	return False
-		for val in self.iter():
-			if val == value:
-				return True
-		else:
-			return False
+	def get_length(self):
+		return self.count
 
-# clearing a list
+	def search(self, data):
+		if self.count == 0:
+			raise AssertionError('List is Empty')
+		for val in self.iter():
+			if val == data:
+				return True
+		return False
+
+	def remove(self, data):
+		if self.count == 0:
+			raise AssertionError('List is Empty')
+		if self.head.data == data:
+			if self.pop_left():
+				return True
+
+		# prev = self.head
+		current = self.head.next
+		while current:
+			if current.data == data:
+				if current == self.tail:
+					current.prev.next = None
+					self.tail = current.prev
+				else:	
+					current.prev.next = current.next
+					current.next.prev = current.prev
+
+				self.count -= 1
+				return True
+			current = current.next
+		return False
+
 	def clear(self):
 		self.head = None
 		self.tail = None
-		self.length = 0
-
+		self.count = 0
 
 
 # The function to test above created list.
 def test():
-	print('Creating a new single linked list with 1 as first element')
-	new_list = SingleLinkedList(1)
+	print('Creating a new doubly linked list with 1 as first element')
+	new_list = DoublyLinkedList(1)
 	assert new_list is not None
 	assert new_list.get_length() == 1
 
@@ -268,20 +239,34 @@ def test():
 # Testing with the list of only on item
 # Uncomment the below code block to test for functionalies with list of only one element
 
-	# singleElementList = SingleLinkedList(90)
+	# singleElementList = DoublyLinkedList(90)
 	# print('Removing the LAST ITEM from the list return value must be 11')
 	# print(singleElementList.pop())
 	# assert singleElementList.get_length() == 0
 
-	# print('Removing the FIRST ITEM from the list return value must be NONE')
+	# print('Removing the FIRST ITEM from the list must raise AssertionError')
 	# print(singleElementList.pop_left())
 	# assert singleElementList.get_length() == 0
-	# i = 1
+
+	# print('-'*60)
+	# print('Search the list')
+	# singleElementList.search(10)
+	
 	# print('-'*60)
 	# print('Printing the list of length %d'%singleElementList.get_length())
+	# i = 1
 	# for item in singleElementList.iter():
 	# 	print('index %d and value is -> %d'%(i ,item))
 	# 	i += 1
 	# print('-'*60)
 
 test()
+
+
+
+
+
+
+
+
+
