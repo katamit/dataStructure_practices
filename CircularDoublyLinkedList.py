@@ -17,121 +17,140 @@ This program demonstrate the creation and some other functionalies of Doubly Lin
 
 # Represent of a single node in a list
 class Node:
-	def __init__(self, data=None, prev=None, next=None):
+	def __init__(self, data=None, prev=None, next_ref=None):
 		self.data = data
 		self.prev = prev
-		self.next = next
+		self.next = next_ref
 
-class DoublyLinkedList:
-	def __init__(self, data=None):
-		self.head = None
-		self.tail = None
+
+
+class CircularDoublyLinkedList:
+	def __init__(self,data=None):
+		self.__head = None
+		self.__tail = None
+		# to keep the count of number of nodes in list
 		self.count = 0
 		if data:
 			node = Node(data)
-			self.head = node
-			self.tail = node
-			self.count = 1
+			node.prev = node
+			node.next = node
+			self.__head = node
+			self.__tail = node
+			self.__count = 1
 
-	def push(self, data):
-		node = Node(data, prev= self.tail)
-		if not self.tail:
-			self.head = node
-			self.tail = node
+#push the tail
+	def push(self,value):
+		node = Node(value, self.__tail, self.__head)
+		if self.__count == 0: # not self.__tail
+			node.prev = node
+			node.next = node
+			self.__head = node
+			self.__tail = node
 		else:
-			self.tail.next = node
-			self.tail = node
-		self.count += 1
+			self.__tail.next = node
+			self.__tail = node
+			self.__head.prev = self.__tail
+		self.__count += 1
 
-	def push_left(self, data):
-		node = Node(data, next=self.head)
-		if not self.head:
-			self.head = node
-			self.tail = node
+# push the head
+	def push_left(self,value):
+		node = Node(value, self.__tail, self.__head)
+		if self.__count == 0: # not self.__tail
+			node.prev = node
+			node.next = node
+			self.__head = node
+			self.__tail = node
 		else:
-			self.head.prev = node
-			self.head = node
-		self.count += 1
+			self.__head.prev = node
+			self.__head  = node
+			self.__tail.next = self.__head
+		self.__count += 1
 
+# pop the tail
 	def pop(self):
-		if self.count == 0:
+		if self.__count == 0:
 			raise IndexError('List is Empty')
-
-		value = self.tail.data
-		# self.tail.prev.next = None
-		if self.count == 1:
-			self.tail = None
-			self.head = None
+		value = self.__tail.data
+		if self.__count == 1:
+			self.__head = None
+			self.__tail = None
 		else:
-			self.tail = self.tail.prev
-			self.tail.next = None
-		self.count -= 1
+			self.__tail = self.__tail.prev
+			self.__tail.next = self.__head
+			self.__head.prev = self.__tail
+		self.__count -= 1
 		return value
-	
-	def pop_left(self):
-		if self.count == 0:
+
+# pop the head
+	def pop_head(self):
+		if self.__count == 0:
 			raise IndexError('List is Empty')
-		value = self.head.data
-		if self.count == 1:
-			self.head = None
-			self.tail = None
+		value = self.__head.data
+		if self.__count == 1:
+			self.__head = None
+			self.__tail = None
 		else:
-			self.head = self.head.next
-			self.head.prev = None
-		self.count -= 1
+			self.__head = self.__head.next
+			self.__head.prev = self.__tail
+			self.__tail.next = self.__head
+		self.__count -= 1
 		return value
 
 	def iter(self):
-		current = self.head
-		while current:
+		if self.__count == 0 or not self.__head:
+			raise IndexError('List is Empty')
+		current = self.__head
+		condition = True
+		# while current is not None and current.next is not self.__head:
+		while condition:
 			value = current.data
 			current = current.next
+			condition = current is not self.__head
 			yield value
 
-	def get_length(self):
-		return self.count
-
-	def search(self, data):
-		if self.count == 0:
-			raise IndexError('List is Empty')
+	def search(self, value):
+		# if self.__count == 0:
+		# 	raise IndexError('List is Empty')
 		for val in self.iter():
-			if val == data:
+			if val == value:
 				return True
-		return False
+		else:
+			return False
 
-	def remove(self, data):
-		if self.count == 0:
+	def get_length(self):
+		return self.__count
+
+	def remove(self, value):
+		if self.__count == 0:
 			raise IndexError('List is Empty')
-		if self.head.data == data:
-			if self.pop_left():
+		if self.__head.data == value:
+			if self.pop_head():
 				return True
 
-		# prev = self.head
-		current = self.head.next
-		while current:
-			if current.data == data:
-				if current == self.tail:
-					current.prev.next = None
-					self.tail = current.prev
+		current = self.__head.next
+		while current is not self.__head:
+			if current.data == value:
+				if current is self.__tail:
+					if self.pop():
+						return True
 				else:	
 					current.prev.next = current.next
 					current.next.prev = current.prev
-
-				self.count -= 1
-				return True
+					self.__count -= 1
+					return True
 			current = current.next
 		return False
 
 	def clear(self):
-		self.head = None
-		self.tail = None
-		self.count = 0
+		self.__head = None
+		self.__tail = None
+		self.__count = 0
 
 
 # The function to test above created list.
 def test():
 	print('Creating a new doubly linked list with 1 as first element')
-	new_list = DoublyLinkedList(1)
+	new_list = CircularDoublyLinkedList(1)
 	assert new_list is not None
 	assert new_list.get_length() == 1
 
@@ -175,7 +194,7 @@ def test():
 
 	print('-'*60)
 	print('Pop the first item from the list return value must be 11')
-	print(new_list.pop_left())
+	print(new_list.pop_head())
 	assert new_list.get_length() == 9
 	
 	print('-'*60)
@@ -230,8 +249,6 @@ def test():
 	print('Clearing the list . Length must be 0 for the list')
 	new_list.clear()
 	assert new_list.get_length() == 0
-	assert new_list.head == None
-	assert new_list.tail == None
 	print('-'*60)
 
 
@@ -245,10 +262,10 @@ def test():
 	# assert singleElementList.get_length() == 0
 
 	# print('Removing the FIRST ITEM from the list must raise IndexError')
-	# print(singleElementList.pop_left())
+	# print(singleElementList.pop_head())
 	# assert singleElementList.get_length() == 0
 
-	# print('-'*60)------------- HITING THIS
+	# print('-'*60)
 	# print('Search the list')
 	# singleElementList.search(10)
 	
@@ -261,12 +278,5 @@ def test():
 	# print('-'*60)
 
 test()
-
-
-
-
-
-
-
 
 
