@@ -30,6 +30,12 @@ class QueueNodeBased:
 	def deque(self):
 		if self.head == None:
 			raise IndexError('Queue is Empty')
+		elif self.count == 1:
+			value = self.head.data
+			self.head = None
+			self.tail = None
+			self.count -= 1
+			return value
 		else:
 			value = self.head.data
 			self.head = self.head.next
