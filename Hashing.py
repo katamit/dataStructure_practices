@@ -30,7 +30,7 @@ class HashTable(object):
 
 	def put(self, key, value):
 		"""
-		we are going to resolve the collision  by addin g one tot he previos hash value we
+		we are going to resolve the collision  by adding one to the previos hash value we
 		had and getting the remainder dividing  this value by the size of the hash table.
 
 		This is a linear way of resolving collision

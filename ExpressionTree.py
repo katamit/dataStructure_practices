@@ -44,5 +44,4 @@ def calc(node):
 
 root = stack.pop()
 result = calc(root)
-
 print(result)
