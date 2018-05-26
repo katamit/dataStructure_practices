@@ -38,8 +38,53 @@ def partition(arr, first, last):
 
 
 def test():
+
+	# this is done to increase the default recursion limit to rest our quicksor against 
+	# list built-in sort functionality for time comparison
+	import sys
+	sys.setrecursionlimit(1000000)
+	# print(sys.getrecursionlimit())
+
+
+	import time
 	a = [6,2,7,89,23,80,342,12,6,0,1,5,2,67,23,4,5,12,3,4,667,23,78,2,9,3,63,23]
+	start =time.time()
 	quickSort(a, 0, len(a)-1)
-	print(a)
+	print('Time it took to sort using inbuilt sort %s seconds'%(time.time()-start))
+
+	# print(a)
+	a = [6,2,7,89,23,80,342,12,6,0,1,5,2,67,23,4,5,12,3,4,667,23,78,2,9,3,63,23]
+	start =time.time()
+	a.sort()
+	print('Time it took to sort using our quicksort %s seconds'%(time.time()-start))	
+
+
+	import random
+
+	a = []
+	for _ in range(10**5):
+		a.append(random.randint(1, 10*9))
+	start =time.time()
+	a.sort()
+	print('Time it took to sort 100000 items using sort() function of list %s seconds'%(time.time()-start))
+	
+	a = []
+	for _ in range(10**5):
+		a.append(random.randint(1, 10*9))
+	start =time.time()
+	quickSort(a, 0, len(a)-1)
+	print('Time it took to sort 100000 items using our quickSort %s seconds'%(time.time()-start))
 
 test()
+
+
+#obtained results
+
+# Time it took to sort using inbuilt sort 6.914138793945312e-05 seconds
+# Time it took to sort using our quicksort  9.5367431640625e-06 seconds
+# Time it took to sort 100000 items using sort() function of list 0.024422407150268555 seconds
+# Time it took to sort 100000 items using our quickSort 5.488919258117676 seconds
+
+
+# In built sort looks way faster than quicksort,--> as per above observation 200+ times faster for arrray
+# of size 100000 elements. This differnce is not big in case of list of small sizes.
