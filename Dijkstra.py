@@ -36,7 +36,6 @@ def find_shortest_path(graph, table, origin):
 	set_shortest_distance(table,origin,0)
 	visited_nodes = []
 	current_node = origin
-	# starting_node = origin
 
 	while  True:
 		adjcent_nodes = graph[current_node].keys()
@@ -80,84 +79,8 @@ def get_next_node(table, visited_nodes):
 	return min_vertex
 
 
-# -------------------------------------------------------------------------
-class Node():
-	def __init__(self, vertex, distance):
-		self.vertex_name = vertex
-		self.distance = distance
-
-
-class Heap:
-	def __init__(self):
-		self.heap = [0]
-		self.count = 0
-	
-	def _float(self, index):
-		'''
-		Makes sure the min Heap is maintained by moving up the recently
-		added value up the heap structure , till when its parent is less than its
-		children
-		'''
-		k = index
-
-		while k//2 > 0:
-			# checks if the parent is greater than the child
-			if self.heap[k//2].distance > self.heap[k].distance:
-				self.heap[k//2], self.heap[k] = self.heap[k] ,self.heap[k//2]
-			else:
-				break
-			k = k//2
-
-	def insert(self, value):
-		self.heap.append(value)
-		self.count += 1
-		self._float(self.count)
-
-
-	def _min(self, k):
-		if k*2 +1 > self.count:
-			return k*2
-		elif self.heap[k*2].distance < self.heap[k*2 +1].distance:
-			return k*2
-		else:
-			return k*2 +1
-
-	def _sink(self):
-		k = 1
-		while k*2 <= self.count:
-			min_index = self._min(k)
-
-			if self.heap[k].distance > self.heap[min_index].distance:
-				self.heap[k] , self.heap[min_index]  = self.heap[min_index], self.heap[k]
-			else:
-				break
-			k = min_index
-
-
-	def pop(self, index=1):
-		'''
-		Pop on a min heap always return the smalles value in the heap
-		in our case it will at '1' index of the heap. After that heap
-		needs to be re-balanced to maintain its min heap structure.
-		'''
-		value = self.heap[index].vertex_name
-		self.heap[index] = self.heap[self.count]
-		self.count -= 1
-		self.heap.pop()
-		self._sink()
-		return value
-
-	def remove(self, vertex):
-		for i in range(1, self.count +1):
-			if self.heap[i].vertex_name == vertex:
-				self.pop(i)
-				break
-				
-# -------------------------------------------------------------------------
-
-
-#this for testing the dijkstra algorithm
-find_shortest_path(graph, table, 'B')
+# this for testing the dijkstra algorithm
+find_shortest_path(graph, table, 'A')
 print(table)
 
 
