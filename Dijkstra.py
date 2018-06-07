@@ -2,6 +2,9 @@
 # design. Dijkstra aims at finding the shortest path between two nodes following a Greedy approach
 # i.e taking the least cost path at every step. It doesn't always result in the best(optimal) solution
 
+# The worst case runnint time complexity of Dijkstra's algorithm is 0(|E| +|V|log|V|) where |V is 
+# the number of vertices and |E| is the number of edges
+
 # Here we use a adjacency list to represent the graph
 graph = dict()
 
