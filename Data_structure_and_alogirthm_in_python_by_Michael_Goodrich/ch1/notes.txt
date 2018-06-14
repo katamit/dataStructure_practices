@@ -1,0 +1,5 @@
+> Exceptions are objects that can be examined when caught
+
+> it is possible to create multiple iterators based upon the same iterable object, with each iterator maintaining its own state
+
+> in programming languages, first-class objects are instances of a type that can be assigned to an identifier, passed as a         parameter, or retruned by a functions. In pyhton, functions and classes are also treated as first-class objects.
