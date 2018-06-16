@@ -1,3 +1,15 @@
 > software development should achieve ROBUSTNESS, ADAPTABILITY AND REUSEABILITY
 
 > the notion of ABSTRACTION is to distill a complicated system down to its fundamental parts
+
+> an ADT(ABSTRACT DATA TYPE) specifies what ech opertion does, but not how it does it
+
+> an iterator for a collection provides one key behaviour. It supports a special method __next__ that returns the next element       	of the collection
+
+> python provides an automatic iterator implementation for any class that defines both __len__ and __getitem__ .
+
+> inheritance represent  as "is a " relationship i.e car is a vehicle
+
+> _ is protected and __ is private similar in python
+
+> there is NO strong tradition of definint abstract base class in python, although python's abc module provides support for defining 	a formal abstract base class
